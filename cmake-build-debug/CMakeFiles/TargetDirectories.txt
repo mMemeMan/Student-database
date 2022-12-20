@@ -1,0 +1,3 @@
+/Users/ArtMi/devolopment/CLionProjects/BazaStudentowV2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/ArtMi/devolopment/CLionProjects/BazaStudentowV2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/ArtMi/devolopment/CLionProjects/BazaStudentowV2/cmake-build-debug/CMakeFiles/BazaStudentowV2.dir

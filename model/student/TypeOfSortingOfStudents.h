@@ -1,0 +1,18 @@
+//
+// Created by Artur Gubanovich on 18.12.22.
+//
+
+#ifndef BAZASTUDENTOWV2_TYPEOFSORTINGOFSTUDENTS_H
+#define BAZASTUDENTOWV2_TYPEOFSORTINGOFSTUDENTS_H
+
+enum TypeOfSortingOfStudents{
+    ASCENDING,
+    DESCENDING
+};
+
+enum StudentSortingCriteria{
+    AVERAGE_ASSES,
+    SURNAME
+};
+
+#endif //BAZASTUDENTOWV2_TYPEOFSORTINGOFSTUDENTS_H
