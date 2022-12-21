@@ -127,7 +127,6 @@ private:
                     studentSwaped = false;
                 } else if (typeOfSort == DESCENDING) {
                     if (lastStudent.averageOfAssessments < student.averageOfAssessments) {
-                        cout << i - 1;
                         swapStudents(i - 1);
                         studentSwaped = true;
                         isSorted = false;
@@ -223,16 +222,9 @@ public:
 //    dodawanie studentow do pliku BazaStudentow
     void addStudent() {
         Student student;
-        ifstream reader(filePath, ios::binary);
-        int lastIndex;
-        for (int i = 0;; i++) {
-            reader.read(reinterpret_cast<char *>(&student), sizeof(student));
-            if (reader.eof()) {
-                lastIndex = i;
-                break;
-            }
-        }
-        reader.close();
+        int lastIndex = findLastIndexInBinaryFile();
+
+        consoleManager.ignoreSymbol();
 
         ofstream writer(filePath, ios::binary | ios::in | ios::ate);
         writer.tellp();
@@ -244,6 +236,7 @@ public:
         student1.surname = consoleManager.getSurnameStudent();
 
         student1.academicYear = consoleManager.getAcademicYear();
+        consoleManager.ignoreSymbol();
 
         student1.courseOfStudy = consoleManager.getCourseOfStudy();
 
@@ -262,6 +255,7 @@ public:
                 "Сhcesz zastąpić wszystkie dane lub konkretny element? 1)wszystkie 2)konkretny element");
 
         int nr = consoleManager.askForIndex("Podaj nr rekordu do edycji: ");
+        consoleManager.ignoreSymbol();
 
         ofstream writer(filePath, ios::binary | ios::in | ios::ate);
         writer.seekp(sizeof(struct Student) * (nr));
@@ -273,6 +267,7 @@ public:
             student.surname = consoleManager.getSurnameStudent();
 
             student.academicYear = consoleManager.getAcademicYear();
+            consoleManager.ignoreSymbol();
 
             student.courseOfStudy = consoleManager.getCourseOfStudy();
 
@@ -295,6 +290,7 @@ public:
                     break;
                 case 2:
                     student.surname = consoleManager.getSurnameStudent();
+                    break;
                 case 3:
                     student.academicYear = consoleManager.getAcademicYear();
                     break;

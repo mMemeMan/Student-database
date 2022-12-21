@@ -15,14 +15,12 @@ public:
 
     string getNameStudent() {
         cout << "Podaj imię: " << endl;
-        cin.ignore();
         getline(cin, str);
         return str;
     }
 
     string getSurnameStudent() {
         cout << "Podaj nazwisko: " << endl;
-        cin.ignore();
         getline(cin, str);
         return str;
     }
@@ -36,14 +34,12 @@ public:
 
     string getCourseOfStudy() {
         cout << "Podaj kierunek: " << endl;
-        cin.ignore();
         getline(cin, str);
         return str;
     }
 
     string getAdres() {
         cout << "Podaj adres: " << endl;
-        cin.ignore();
         getline(cin, str);
         return str;
     }
@@ -53,6 +49,10 @@ public:
         double averageOfAssessments;
         cin >> averageOfAssessments;
         return averageOfAssessments;
+    }
+
+    void ignoreSymbol() {
+        cin.ignore();
     }
 
     int printMenu() {
