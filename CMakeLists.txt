@@ -3,4 +3,4 @@ project(BazaStudentowV2)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(BazaStudentowV2 model/mainProcess/main.cpp model/student/StudentManager.h model/student/Student.h model/student/TypeOfSortingOfStudents.h model/mainProcess/Process.h model/initialization/Initialization.h view/ConsoleManager.h)
+add_executable(BazaStudentowV2 model/mainProcess/main.cpp model/student/StudentManager.h model/student/Student.h model/student/TypeOfSortingOfStudents.h model/mainProcess/Process.h model/initialization/Initialization.h view/ConsoleManager.h model/utils/BinaryFileManager.h)

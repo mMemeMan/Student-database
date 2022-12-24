@@ -13,6 +13,8 @@
 #include "../../view/ConsoleManager.h"
 #include <stdio.h>
 #include <vector>
+#include <cstring>
+#include "../utils/BinaryFileManager.h"
 
 using namespace std;
 
@@ -25,84 +27,12 @@ private:
 //    link do pliku ze studentami
     string filePath;
 
-//    wynalizienie ostatniego indeksu w pliku
-    int findLastIndexInBinaryFile() {
-        Student student;
-        ifstream reader(filePath, ios::binary);
-        int lastIndex;
-        for (int i = 0;; i++) {
-            reader.read(reinterpret_cast<char *>(&student), sizeof(student));
-            if (reader.eof()) {
-                lastIndex = i;
-                break;
-            }
-        }
-        reader.close();
-        return lastIndex;
-    }
-
-//    zmiana miejsc dwóch studentów w pliku
-    void swapStudents(int swapPoint) {
-        Student student;
-        Student lastStudent;
-        ifstream reader(filePath, ios::binary);
-        ofstream writer("sortedTempFile.dat", ios::binary | ios::out);
-
-        bool pointFinded = false;
-        for (int i = 0;; i++) {
-            reader.read(reinterpret_cast<char *>(&student), sizeof(student));
-            if (reader.eof()) break;
-
-            if (i == swapPoint) {
-                lastStudent = student;
-                pointFinded = true;
-            } else if (pointFinded) {
-                writer.write(reinterpret_cast<char *>(&student), sizeof(student));
-                writer.write(reinterpret_cast<char *>(&lastStudent), sizeof(lastStudent));
-                pointFinded = false;
-            } else {
-                writer.write(reinterpret_cast<char *>(&student), sizeof(student));
-            }
-        }
-        reader.close();
-        writer.close();
-
-        char filePathChars[filePath.length()];
-        strcpy(filePathChars, filePath.c_str());
-        remove(filePathChars);
-
-        char oldname[] = "sortedTempFile.dat";
-        char newname[filePath.length()];
-        for (int i = 0; i < filePath.length(); ++i) {
-            newname[i] = filePath[i];
-        }
-
-        int result;
-        result = rename(oldname, newname);
-        if (result == 0) {
-//            puts("File successfully renamed");
-        } else {
-            perror("Error renaming file");
-            throw new exception;
-        }
-    }
-
-//    odczyt danych studenta w określonym punkcie
-    Student readStudent(int position) {
-        Student student;
-        ifstream reader(filePath, ios::binary);
-        for (int i = 0;; i++) {
-            reader.read(reinterpret_cast<char *>(&student), sizeof(student));
-            if (reader.eof()) break;
-            if (i == position) return student;
-        }
-        reader.close();
-        return student;
-    }
+    BinaryFileManager<Student> binaryFileManager;
 
 //    Sortowanie studentow według pozycji Średnia ocena
     void sortAverageAsses(TypeOfSortingOfStudents typeOfSort) {
-        int lastIndex = findLastIndexInBinaryFile();
+        binaryFileManager.setFilePath(filePath);
+        int lastIndex = binaryFileManager.findLastIndexInBinaryFile();
         Student lastStudent;
         Student student;
         bool studentSwaped = false;
@@ -111,13 +41,13 @@ private:
         while (true) {
             isSorted = true;
             for (int i = 0; i < lastIndex; i++) {
-                student = readStudent(i);
+                student = binaryFileManager.readStudent(i);
 
                 if (i == 0) {
                     lastStudent = student;
                 } else if (typeOfSort == ASCENDING) {
                     if (lastStudent.averageOfAssessments > student.averageOfAssessments) {
-                        swapStudents(i - 1);
+                        binaryFileManager.swapStudents(i - 1);
                         studentSwaped = true;
                         isSorted = false;
                     }
@@ -127,7 +57,7 @@ private:
                     studentSwaped = false;
                 } else if (typeOfSort == DESCENDING) {
                     if (lastStudent.averageOfAssessments < student.averageOfAssessments) {
-                        swapStudents(i - 1);
+                        binaryFileManager.swapStudents(i - 1);
                         studentSwaped = true;
                         isSorted = false;
                     }
@@ -143,7 +73,9 @@ private:
 
 //   Sortowanie studentow według pozycji nazwisko
     void sortSurname(TypeOfSortingOfStudents typeOfSort) {
-        int lastIndex = findLastIndexInBinaryFile();
+
+        binaryFileManager.setFilePath(filePath);
+        int lastIndex = binaryFileManager.findLastIndexInBinaryFile();
         Student lastStudent;
         Student student;
         bool studentSwaped = false;
@@ -152,7 +84,7 @@ private:
         while (true) {
             isSorted = true;
             for (int i = 0; i < lastIndex; i++) {
-                student = readStudent(i);
+                student = binaryFileManager.readStudent(i);
 
                 if (i == 0) {
                     lastStudent = student;
@@ -167,7 +99,7 @@ private:
                     }
 
                     if (firstSortedStudentSurname == student.surname) {
-                        swapStudents(i - 1);
+                        binaryFileManager.swapStudents(i - 1);
                         studentSwaped = true;
                         isSorted = false;
                     }
@@ -187,7 +119,7 @@ private:
                     }
 
                     if (firstSortedStudentSurname == student.surname) {
-                        swapStudents(i - 1);
+                        binaryFileManager.swapStudents(i - 1);
                         studentSwaped = true;
                         isSorted = false;
                     }
@@ -222,8 +154,10 @@ public:
 //    dodawanie studentow do pliku BazaStudentow
     void addStudent() {
         Student student;
-        int lastIndex = findLastIndexInBinaryFile();
 
+        binaryFileManager.setFilePath(filePath);
+        int lastIndex = binaryFileManager.findLastIndexInBinaryFile();
+        //ignore char po wypisywaniu menu (błąd getline'a)
         consoleManager.ignoreSymbol();
 
         ofstream writer(filePath, ios::binary | ios::in | ios::ate);
@@ -282,7 +216,7 @@ public:
             index = consoleManager.askForIndex(
                     "ktory element chcesz zmienic: 1)imie 2)nazwisko 3)rok studiow 4)kierunek 5)adres 6)srednia z ocen ");
 
-            student = readStudent(nr);
+            student = binaryFileManager.readStudent(nr);
 
             switch (index) {
                 case 1:
