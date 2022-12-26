@@ -41,13 +41,13 @@ private:
         while (true) {
             isSorted = true;
             for (int i = 0; i < lastIndex; i++) {
-                student = binaryFileManager.readStudent(i);
+                student = binaryFileManager.readElement(i);
 
                 if (i == 0) {
                     lastStudent = student;
                 } else if (typeOfSort == ASCENDING) {
                     if (lastStudent.averageOfAssessments > student.averageOfAssessments) {
-                        binaryFileManager.swapStudents(i - 1);
+                        binaryFileManager.swapElements(i - 1);
                         studentSwaped = true;
                         isSorted = false;
                     }
@@ -57,7 +57,7 @@ private:
                     studentSwaped = false;
                 } else if (typeOfSort == DESCENDING) {
                     if (lastStudent.averageOfAssessments < student.averageOfAssessments) {
-                        binaryFileManager.swapStudents(i - 1);
+                        binaryFileManager.swapElements(i - 1);
                         studentSwaped = true;
                         isSorted = false;
                     }
@@ -84,7 +84,7 @@ private:
         while (true) {
             isSorted = true;
             for (int i = 0; i < lastIndex; i++) {
-                student = binaryFileManager.readStudent(i);
+                student = binaryFileManager.readElement(i);
 
                 if (i == 0) {
                     lastStudent = student;
@@ -99,7 +99,7 @@ private:
                     }
 
                     if (firstSortedStudentSurname == student.surname) {
-                        binaryFileManager.swapStudents(i - 1);
+                        binaryFileManager.swapElements(i - 1);
                         studentSwaped = true;
                         isSorted = false;
                     }
@@ -119,7 +119,7 @@ private:
                     }
 
                     if (firstSortedStudentSurname == student.surname) {
-                        binaryFileManager.swapStudents(i - 1);
+                        binaryFileManager.swapElements(i - 1);
                         studentSwaped = true;
                         isSorted = false;
                     }
@@ -143,12 +143,16 @@ public:
     void printData() {
         Student student;
         ifstream reader(filePath, ios::binary);
-        for (int i = 0;; i++) {
-            reader.read(reinterpret_cast<char *>(&student), sizeof(student));
-            if (reader.eof()) break;
-            consoleManager.printDataStudent(student, i);
+        if (!reader) {
+            consoleManager.printError("Error with file");
+        } else {
+            for (int i = 0;; i++) {
+                reader.read(reinterpret_cast<char *>(&student), sizeof(student));
+                if (reader.eof()) break;
+                consoleManager.printDataStudent(student, i);
+            }
+            reader.close();
         }
-        reader.close();
     }
 
 //    dodawanie studentow do pliku BazaStudentow
@@ -161,29 +165,37 @@ public:
         consoleManager.ignoreSymbol();
 
         ofstream writer(filePath, ios::binary | ios::in | ios::ate);
-        writer.tellp();
-        writer.seekp(sizeof(struct Student) * (lastIndex));
-        Student student1;
 
-        student1.name = consoleManager.getNameStudent();
+        if (!writer) {
+            consoleManager.printError("Error with file");
+        } else {
+            writer.tellp();
+            writer.seekp(sizeof(struct Student) * (lastIndex));
+            Student student1;
 
-        student1.surname = consoleManager.getSurnameStudent();
+            student1.name = consoleManager.getNameStudent();
 
-        student1.academicYear = consoleManager.getAcademicYear();
-        consoleManager.ignoreSymbol();
+            student1.surname = consoleManager.getSurnameStudent();
 
-        student1.courseOfStudy = consoleManager.getCourseOfStudy();
 
-        student1.adres = consoleManager.getAdres();
+            student1.academicYear = consoleManager.getAcademicYear();
+            consoleManager.ignoreSymbol();
 
-        student1.averageOfAssessments = consoleManager.getAverageOfAssessments();
+            student1.courseOfStudy = consoleManager.getCourseOfStudy();
 
-        writer.write(reinterpret_cast<char *>(&student1), sizeof(student1));
-        writer.close();
+            student1.adres = consoleManager.getAdres();
+
+            student1.averageOfAssessments = consoleManager.getAverageOfAssessments();
+
+            writer.write(reinterpret_cast<char *>(&student1), sizeof(student1));
+            writer.close();
+        }
     }
 
 //    zmiana danych studentow w pliku BazaStudentow
     void changeDataStudent() {
+        binaryFileManager.setFilePath(filePath);
+
         int index;
         index = consoleManager.askForIndex(
                 "Сhcesz zastąpić wszystkie dane lub konkretny element? 1)wszystkie 2)konkretny element");
@@ -192,53 +204,64 @@ public:
         consoleManager.ignoreSymbol();
 
         ofstream writer(filePath, ios::binary | ios::in | ios::ate);
-        writer.seekp(sizeof(struct Student) * (nr));
-        Student student;
-        if (index == 1) {
 
-            student.name = consoleManager.getNameStudent();
+        if (!writer) {
+            consoleManager.printError("Error with file");
+        } else {
+            writer.seekp(sizeof(struct Student) * (nr));
+            Student student;
+            if (index == 1) {
 
-            student.surname = consoleManager.getSurnameStudent();
+                student.name = consoleManager.getNameStudent();
 
-            student.academicYear = consoleManager.getAcademicYear();
-            consoleManager.ignoreSymbol();
+                student.surname = consoleManager.getSurnameStudent();
 
-            student.courseOfStudy = consoleManager.getCourseOfStudy();
+                student.academicYear = consoleManager.getAcademicYear();
+                consoleManager.ignoreSymbol();
 
-            student.adres = consoleManager.getAdres();
+                student.courseOfStudy = consoleManager.getCourseOfStudy();
 
-            student.averageOfAssessments = consoleManager.getAverageOfAssessments();
+                student.adres = consoleManager.getAdres();
 
-            writer.write(reinterpret_cast<char *>(&student), sizeof(student));
-            writer.close();
-        } else if (index == 2) {
+                student.averageOfAssessments = consoleManager.getAverageOfAssessments();
 
-            index = consoleManager.askForIndex(
-                    "ktory element chcesz zmienic: 1)imie 2)nazwisko 3)rok studiow 4)kierunek 5)adres 6)srednia z ocen ");
+                writer.write(reinterpret_cast<char *>(&student), sizeof(student));
+                writer.close();
+            } else if (index == 2) {
 
-            student = binaryFileManager.readStudent(nr);
+                index = consoleManager.askForIndex(
+                        "ktory element chcesz zmienic: 1)imie 2)nazwisko 3)rok studiow 4)kierunek 5)adres 6)srednia z ocen ");
 
-            switch (index) {
-                case 1:
-                    student.name = consoleManager.getNameStudent();
-                    break;
-                case 2:
-                    student.surname = consoleManager.getSurnameStudent();
-                    break;
-                case 3:
-                    student.academicYear = consoleManager.getAcademicYear();
-                    break;
-                case 4:
-                    student.courseOfStudy = consoleManager.getCourseOfStudy();
-                    break;
-                case 5:
-                    student.adres = consoleManager.getAdres();
-                    break;
-                case 6:
-                    student.averageOfAssessments = consoleManager.getAverageOfAssessments();
+                student = binaryFileManager.readElement(nr);
+
+                switch (index) {
+                    case 1:
+                        consoleManager.ignoreSymbol();
+                        student.name = consoleManager.getNameStudent();
+                        break;
+                    case 2:
+                        consoleManager.ignoreSymbol();
+                        student.surname = consoleManager.getSurnameStudent();
+                        break;
+                    case 3:
+                        student.academicYear = consoleManager.getAcademicYear();
+                        break;
+                    case 4:
+                        consoleManager.ignoreSymbol();
+                        student.courseOfStudy = consoleManager.getCourseOfStudy();
+                        break;
+                    case 5:
+                        consoleManager.ignoreSymbol();
+                        student.adres = consoleManager.getAdres();
+                        break;
+                    case 6:
+                        student.averageOfAssessments = consoleManager.getAverageOfAssessments();
+                }
+
+                writer.write(reinterpret_cast<char *>(&student), sizeof(student));
+            } else {
+                consoleManager.printError("Nieprawidłowy indeks");
             }
-
-            writer.write(reinterpret_cast<char *>(&student), sizeof(student));
         }
     }
 
@@ -246,24 +269,31 @@ public:
     void removeStudent() {
         int deleteIndex = consoleManager.askForIndex("Podaj numer rekordu");
 
-        ifstream reader(filePath, ios::binary);
-        if (!reader)
-            consoleManager.printError("Error with file");
-        else {
-            reader.seekg(0, ios::end);
-            int size = reader.tellg();
-            size = size / sizeof(Student);
-            Student *Students_1 = new Student[size];
-            reader.seekg(0, ios::beg);
-            reader.read((char *) Students_1, sizeof(Student) * size);
-            reader.close();
+        char tempFileName[] = "sortedTempFile.dat";
 
-            ofstream writer(filePath, ios::binary);
-            for (int i = 0; i < size; i++) {
-                if (i != deleteIndex)
-                    writer.write((char *) &Students_1[i], sizeof(Student));
+        ifstream reader(filePath, ios::binary);
+
+        ofstream writer(tempFileName, ios::binary);
+
+        if (!reader) {
+            consoleManager.printError("Error with file");
+        } else {
+            binaryFileManager.setFilePath(filePath);
+            int lastIndex = binaryFileManager.findLastIndexInBinaryFile();
+
+            Student student;
+
+            for (int i = 0; i < lastIndex; i++) {
+                if (reader.eof()) break;
+                reader.read(reinterpret_cast<char *>(&student), sizeof(student));
+                if (i != deleteIndex) {
+                    writer.write(reinterpret_cast<char *>(&student), sizeof(student));
+                }
             }
             writer.close();
+            reader.close();
+
+            binaryFileManager.fileSubstitute(filePath, tempFileName);
         }
     }
 
@@ -273,6 +303,8 @@ public:
             sortAverageAsses(typeOfSort);
         } else if (crit == SURNAME) {
             sortSurname(typeOfSort);
+        } else {
+            consoleManager.printError("Nieprawidłowy indeks");
         }
     }
 };

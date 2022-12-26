@@ -28,6 +28,7 @@ public:
     int findLastIndexInBinaryFile() {
         T t;
         ifstream reader(filePath, ios::binary);
+
         int lastIndex;
         for (int i = 0;; i++) {
             reader.read(reinterpret_cast<char *>(&t), sizeof(t));
@@ -41,7 +42,7 @@ public:
     }
 
     //    odczyt danych w określonym punkcie
-    Student readStudent(int position) {
+    T readElement(int position) {
         T t;
         ifstream reader(filePath, ios::binary);
         for (int i = 0;; i++) {
@@ -53,12 +54,33 @@ public:
         return t;
     }
 
+//    Zamiana starego pliku na nowy
+    void fileSubstitute(string filePath, string replacementFilePath) {
+        char filePathChars[filePath.length()];
+        strcpy(filePathChars, filePath.c_str());
+        remove(filePathChars);
+
+        char replacmentFPChars[replacementFilePath.length()];
+        strcpy(replacmentFPChars, replacementFilePath.c_str());
+
+        int result;
+        result = rename(replacmentFPChars, filePathChars);
+        if (result == 0) {
+//            puts("File successfully renamed");
+        } else {
+            perror("Error renaming file");
+            throw new exception;
+        }
+    }
+
     //    zmiana miejsc dwóch elementow w pliku
-    void swapStudents(int swapPoint) {
+    void swapElements(int swapPoint) {
+        char tempFileName[] = "sortedTempFile.dat";
+
         T t;
         T lastT;
         ifstream reader(filePath, ios::binary);
-        ofstream writer("sortedTempFile.dat", ios::binary | ios::out);
+        ofstream writer(tempFileName, ios::binary | ios::out);
 
         bool pointFinded = false;
         for (int i = 0;; i++) {
@@ -79,24 +101,7 @@ public:
         reader.close();
         writer.close();
 
-        char filePathChars[filePath.length()];
-        strcpy(filePathChars, filePath.c_str());
-        remove(filePathChars);
-
-        char oldname[] = "sortedTempFile.dat";
-        char newname[filePath.length()];
-        for (int i = 0; i < filePath.length(); ++i) {
-            newname[i] = filePath[i];
-        }
-
-        int result;
-        result = rename(oldname, newname);
-        if (result == 0) {
-//            puts("File successfully renamed");
-        } else {
-            perror("Error renaming file");
-            throw new exception;
-        }
+        fileSubstitute(filePath, tempFileName);
     }
 };
 

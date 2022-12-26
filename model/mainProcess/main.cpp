@@ -14,7 +14,7 @@
 using namespace std;
 
 //link do pliku ze studentami
-const string filePath = "..\\..\\BazaStudentow.dat";
+const string filePath = "BazaStudentow.dat";
 
 int main() {
 
@@ -23,7 +23,7 @@ int main() {
     initialization.init(filePath);
 
 //    uruchamianie głównej pętli
-    Process& process = Process::getInstance();
+    Process &process = Process::getInstance();
     process.setFilePath(filePath);
     process.startSession();
 

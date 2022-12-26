@@ -54,9 +54,9 @@ public:
                 studentManager.removeStudent();
             } else if (index == 4) {
 
-                int sortTarget = consoleManager.getSortTarget();
+                int sortTarget = consoleManager.askForIndex("Podaj cel sortowania: 1) Średnia z ocen 2) Nazwisko ");
 
-                int sortCrit = consoleManager.getSortCrit();
+                int sortCrit = consoleManager.askForIndex("Podaj kryterium sortowania: 1)Rosnacy 2)Malejacy ");
 
                 if (sortTarget == 1) {
 
@@ -64,6 +64,8 @@ public:
                         studentManager.sortStudents(AVERAGE_ASSES, ASCENDING);
                     } else if (sortCrit == 2) {
                         studentManager.sortStudents(AVERAGE_ASSES, DESCENDING);
+                    } else {
+                        consoleManager.printError("Nieprawidłowy indeks");
                     }
 
                 } else if (sortTarget == 2) {
@@ -72,15 +74,19 @@ public:
                         studentManager.sortStudents(SURNAME, ASCENDING);
                     } else if (sortCrit == 2) {
                         studentManager.sortStudents(SURNAME, DESCENDING);
+                    } else {
+                        consoleManager.printError("Nieprawidłowy indeks");
                     }
 
+                } else {
+                    consoleManager.printError("Nieprawidłowy indeks");
                 }
             } else if (index == 5) {
                 studentManager.changeDataStudent();
             } else if (index == 6) {
                 return 0;
             } else {
-                consoleManager.printError("niepoprawny index");
+                consoleManager.printError("Nieprawidłowy indeks");
             }
         }
     }
