@@ -18,7 +18,7 @@ void init(string filePath) {
     Student std1 = {"Artur", "Gubanovich", 1,
                     "informatyka", "ul zytnia 17/19", 6};
     Student std2 = {"SerGej", "Nadmennyj", 1,
-                    "informatyka", "ul 3 maja", 1};
+                    "informatyka", "ul 3 maja", 4};
     Student std3 = {"Uladzislau", "Sok", 1,
                     "informatyka", "ul zytnia 17/19", 0};
     Student std4 = {"Kram", "Kudriakow", 1,

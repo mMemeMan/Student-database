@@ -29,9 +29,11 @@ public:
     short getAcademicYear() {
         string academicYear;
         do {
-            cout << "Podaj rok studiow: " << endl;
+            cout << "Podaj rok studiow [1;4]: " << endl;
             cin >> academicYear;
-        } while (!checkCorrectnessEnteredNumber(academicYear));
+        } while (!checkCorrectnessEnteredNumber(academicYear)
+                 || (stod(academicYear) < 1)
+                 || (stod(academicYear) > 4));
         return stoi(academicYear);
     }
 
@@ -50,9 +52,12 @@ public:
     double getAverageOfAssessments() {
         string averageOfAssessments;
         do {
-            cout << "Podaj sredniu z ocen: " << endl;
+            cout << "Podaj sredniu z ocen [0; 6]: " << endl;
             cin >> averageOfAssessments;
-        } while (!checkCorrectnessEnteredNumber(averageOfAssessments));
+        } while ((!checkCorrectnessEnteredNumber(averageOfAssessments))
+                 || (stod(averageOfAssessments) < 0)
+                 || (stod(averageOfAssessments) > 6));
+
         return stod(averageOfAssessments);
     }
 

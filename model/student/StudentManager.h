@@ -89,44 +89,47 @@ private:
                 if (i == 0) {
                     lastStudent = student;
                 } else if (typeOfSort == ASCENDING) {
-                    vector<string> studentsSurnames = {lastStudent.surname, student.surname};
-                    sort(studentsSurnames.begin(), studentsSurnames.end());
+                    if (lastStudent.surname != student.surname) {
+                        vector<string> studentsSurnames = {lastStudent.surname, student.surname};
+                        sort(studentsSurnames.begin(), studentsSurnames.end());
 
-                    string firstSortedStudentSurname;
-                    for (string temp: studentsSurnames) {
-                        firstSortedStudentSurname = temp;
-                        break;
-                    }
+                        string firstSortedStudentSurname;
+                        for (string temp: studentsSurnames) {
+                            firstSortedStudentSurname = temp;
+                            break;
+                        }
 
-                    if (firstSortedStudentSurname == student.surname) {
-                        binaryFileManager.swapElements(i - 1);
-                        studentSwaped = true;
-                        isSorted = false;
+                        if (firstSortedStudentSurname == student.surname) {
+                            binaryFileManager.swapElements(i - 1);
+                            studentSwaped = true;
+                            isSorted = false;
+                        }
+                        if (!studentSwaped) {
+                            lastStudent = student;
+                        }
+                        studentSwaped = false;
                     }
-                    if (!studentSwaped) {
-                        lastStudent = student;
-                    }
-                    studentSwaped = false;
                 } else if (typeOfSort == DESCENDING) {
+                    if (lastStudent.surname != student.surname) {
+                        vector<string> studentsSurnames = {lastStudent.surname, student.surname};
+                        sort(studentsSurnames.begin(), studentsSurnames.end(), greater<string>());
 
-                    vector<string> studentsSurnames = {lastStudent.surname, student.surname};
-                    sort(studentsSurnames.begin(), studentsSurnames.end(), greater<string>());
+                        string firstSortedStudentSurname;
+                        for (string temp: studentsSurnames) {
+                            firstSortedStudentSurname = temp;
+                            break;
+                        }
 
-                    string firstSortedStudentSurname;
-                    for (string temp: studentsSurnames) {
-                        firstSortedStudentSurname = temp;
-                        break;
+                        if (firstSortedStudentSurname == student.surname) {
+                            binaryFileManager.swapElements(i - 1);
+                            studentSwaped = true;
+                            isSorted = false;
+                        }
+                        if (!studentSwaped) {
+                            lastStudent = student;
+                        }
+                        studentSwaped = false;
                     }
-
-                    if (firstSortedStudentSurname == student.surname) {
-                        binaryFileManager.swapElements(i - 1);
-                        studentSwaped = true;
-                        isSorted = false;
-                    }
-                    if (!studentSwaped) {
-                        lastStudent = student;
-                    }
-                    studentSwaped = false;
                 }
             }
             if (isSorted) break;
@@ -269,7 +272,7 @@ public:
     void removeStudent() {
         int deleteIndex = consoleManager.askForIndex("Podaj numer rekordu");
 
-        char tempFileName[] = "sortedTempFile.dat";
+        char tempFileName[] = "tempFile.dat";
 
         ifstream reader(filePath, ios::binary);
 
