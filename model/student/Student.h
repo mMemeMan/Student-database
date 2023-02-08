@@ -9,12 +9,17 @@
 
 using namespace std;
 
+static const int NAME_SIZE = 40;
+static const int SURNAME_SIZE = 50;
+static const int ADRES_SIZE = 80;
+static const int СOURSE_STUDY_SIZE = 40;
+
 struct Student {
-    string name;
-    string surname;
+    char *name = new char[NAME_SIZE];
+    char *surname = new char[SURNAME_SIZE];
     short academicYear;
-    string courseOfStudy;
-    string adres;
+    char *courseOfStudy = new char[СOURSE_STUDY_SIZE];
+    char *adres = new char[ADRES_SIZE];
     double averageOfAssessments;
 };
 

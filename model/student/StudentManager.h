@@ -90,16 +90,9 @@ private:
                     lastStudent = student;
                 } else if (typeOfSort == ASCENDING) {
                     if (lastStudent.surname != student.surname) {
-                        vector<string> studentsSurnames = {lastStudent.surname, student.surname};
-                        sort(studentsSurnames.begin(), studentsSurnames.end());
-
-                        string firstSortedStudentSurname;
-                        for (string temp: studentsSurnames) {
-                            firstSortedStudentSurname = temp;
-                            break;
-                        }
-
-                        if (firstSortedStudentSurname == student.surname) {
+                        string lastTemp = lastStudent.surname;
+                        string temp = student.surname;
+                        if (lastTemp.compare(temp) < 0) {
                             binaryFileManager.swapElements(i - 1);
                             studentSwaped = true;
                             isSorted = false;
@@ -111,16 +104,10 @@ private:
                     }
                 } else if (typeOfSort == DESCENDING) {
                     if (lastStudent.surname != student.surname) {
-                        vector<string> studentsSurnames = {lastStudent.surname, student.surname};
-                        sort(studentsSurnames.begin(), studentsSurnames.end(), greater<string>());
 
-                        string firstSortedStudentSurname;
-                        for (string temp: studentsSurnames) {
-                            firstSortedStudentSurname = temp;
-                            break;
-                        }
-
-                        if (firstSortedStudentSurname == student.surname) {
+                        string lastTemp = lastStudent.surname;
+                        string temp = student.surname;
+                        if (lastTemp.compare(temp) > 0) {
                             binaryFileManager.swapElements(i - 1);
                             studentSwaped = true;
                             isSorted = false;
@@ -176,17 +163,17 @@ public:
             writer.seekp(sizeof(struct Student) * (lastIndex));
             Student student1;
 
-            student1.name = consoleManager.getNameStudent();
+            consoleManager.getNameStudent(&student1);
 
-            student1.surname = consoleManager.getSurnameStudent();
+            consoleManager.getSurnameStudent(&student1);
 
 
             student1.academicYear = consoleManager.getAcademicYear();
             consoleManager.ignoreSymbol();
 
-            student1.courseOfStudy = consoleManager.getCourseOfStudy();
+            consoleManager.getCourseOfStudy(&student1);
 
-            student1.adres = consoleManager.getAdres();
+            consoleManager.getAdres(&student1);
 
             student1.averageOfAssessments = consoleManager.getAverageOfAssessments();
 
@@ -215,16 +202,16 @@ public:
             Student student;
             if (index == 1) {
 
-                student.name = consoleManager.getNameStudent();
+                consoleManager.getNameStudent(&student);
 
-                student.surname = consoleManager.getSurnameStudent();
+                consoleManager.getSurnameStudent(&student);
 
                 student.academicYear = consoleManager.getAcademicYear();
                 consoleManager.ignoreSymbol();
 
-                student.courseOfStudy = consoleManager.getCourseOfStudy();
+                consoleManager.getCourseOfStudy(&student);
 
-                student.adres = consoleManager.getAdres();
+                consoleManager.getAdres(&student);
 
                 student.averageOfAssessments = consoleManager.getAverageOfAssessments();
 
@@ -236,32 +223,63 @@ public:
                         "ktory element chcesz zmienic: 1)imie 2)nazwisko 3)rok studiow 4)kierunek 5)adres 6)srednia z ocen ");
 
                 student = binaryFileManager.readElement(nr);
+                Student tempStudent;
 
                 switch (index) {
                     case 1:
                         consoleManager.ignoreSymbol();
-                        student.name = consoleManager.getNameStudent();
+                        consoleManager.getNameStudent(&tempStudent);
+                        tempStudent.surname = student.surname;
+                        tempStudent.academicYear = student.academicYear;
+                        tempStudent.courseOfStudy = student.courseOfStudy;
+                        tempStudent.adres = student.adres;
+                        tempStudent.averageOfAssessments = student.averageOfAssessments;
                         break;
                     case 2:
                         consoleManager.ignoreSymbol();
-                        student.surname = consoleManager.getSurnameStudent();
+                        consoleManager.getSurnameStudent(&tempStudent);
+                        tempStudent.name = student.name;
+                        tempStudent.academicYear = student.academicYear;
+                        tempStudent.courseOfStudy = student.courseOfStudy;
+                        tempStudent.adres = student.adres;
+                        tempStudent.averageOfAssessments = student.averageOfAssessments;
                         break;
                     case 3:
-                        student.academicYear = consoleManager.getAcademicYear();
+                        tempStudent.academicYear = consoleManager.getAcademicYear();
+                        tempStudent.name = student.name;
+                        tempStudent.surname = student.surname;
+                        tempStudent.courseOfStudy = student.courseOfStudy;
+                        tempStudent.adres = student.adres;
+                        tempStudent.averageOfAssessments = student.averageOfAssessments;
                         break;
                     case 4:
                         consoleManager.ignoreSymbol();
-                        student.courseOfStudy = consoleManager.getCourseOfStudy();
+                        consoleManager.getCourseOfStudy(&tempStudent);
+                        tempStudent.name = student.name;
+                        tempStudent.surname = student.surname;
+                        tempStudent.academicYear = student.academicYear;
+                        tempStudent.adres = student.adres;
+                        tempStudent.averageOfAssessments = student.averageOfAssessments;
                         break;
                     case 5:
                         consoleManager.ignoreSymbol();
-                        student.adres = consoleManager.getAdres();
+                        consoleManager.getAdres(&tempStudent);
+                        tempStudent.name = student.name;
+                        tempStudent.surname = student.surname;
+                        tempStudent.academicYear = student.academicYear;
+                        tempStudent.courseOfStudy = student.courseOfStudy;
+                        tempStudent.averageOfAssessments = student.averageOfAssessments;
                         break;
                     case 6:
                         student.averageOfAssessments = consoleManager.getAverageOfAssessments();
+                        tempStudent.name = student.name;
+                        tempStudent.surname = student.surname;
+                        tempStudent.academicYear = student.academicYear;
+                        tempStudent.courseOfStudy = student.courseOfStudy;
+                        tempStudent.adres = student.adres;
                 }
 
-                writer.write(reinterpret_cast<char *>(&student), sizeof(student));
+                writer.write(reinterpret_cast<char *>(&tempStudent), sizeof(tempStudent));
             } else {
                 consoleManager.printError("Nieprawidłowy indeks");
             }

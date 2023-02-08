@@ -29,7 +29,6 @@ public:
         return instance;
     }
 
-
     void setFilePath(string filePath) {
         this->filePath = filePath;
     }

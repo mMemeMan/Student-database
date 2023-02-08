@@ -14,16 +14,36 @@ private:
     string str;
 public:
 
-    string getNameStudent() {
-        cout << "Podaj imię: " << endl;
-        getline(cin, str);
-        return str;
+    void getNameStudent(Student *student) {
+        do {
+            str = "";
+
+//        czyszczenie tablicy
+            memset(student->name, 0, sizeof(int) * NAME_SIZE);
+
+            string temp = "";
+            cout << "Podaj imie: " << endl;
+            getline(cin, str);
+
+        } while(str.length() > NAME_SIZE);
+
+        str.copy(student->name, NAME_SIZE);
     }
 
-    string getSurnameStudent() {
-        cout << "Podaj nazwisko: " << endl;
-        getline(cin, str);
-        return str;
+    void getSurnameStudent(Student *student) {
+        do {
+            str = "";
+
+//        czyszczenie tablicy
+            memset(student->surname, 0, sizeof(int) * SURNAME_SIZE);
+
+            string temp = "";
+            cout << "Podaj nazwisko: " << endl;
+            getline(cin, str);
+
+        } while(str.length() > SURNAME_SIZE);
+
+        str.copy(student->surname, SURNAME_SIZE);
     }
 
     short getAcademicYear() {
@@ -37,16 +57,36 @@ public:
         return stoi(academicYear);
     }
 
-    string getCourseOfStudy() {
-        cout << "Podaj kierunek: " << endl;
-        getline(cin, str);
-        return str;
+    void getCourseOfStudy(Student *student) {
+        do {
+            str = "";
+
+//        czyszczenie tablicy
+            memset(student->courseOfStudy, 0, sizeof(int) * СOURSE_STUDY_SIZE);
+
+            string temp = "";
+            cout << "Podaj kierunek: " << endl;
+            getline(cin, str);
+
+        } while(str.length() > СOURSE_STUDY_SIZE);
+
+        str.copy(student->courseOfStudy, СOURSE_STUDY_SIZE);
     }
 
-    string getAdres() {
-        cout << "Podaj adres: " << endl;
-        getline(cin, str);
-        return str;
+    void getAdres(Student *student) {
+        do {
+            str = "";
+
+//        czyszczenie tablicy
+            memset(student->adres, 0, sizeof(int) * ADRES_SIZE);
+
+            string temp = "";
+            cout << "Podaj adres: " << endl;
+            getline(cin, str);
+
+        } while(str.length()+1 > ADRES_SIZE);
+
+        str.copy(student->adres, ADRES_SIZE);
     }
 
     double getAverageOfAssessments() {
@@ -66,12 +106,12 @@ public:
     }
 
     int printMenu() {
-        str = "1)Pokazać wszystkich studentów"
-              " 2)Dodać studenta"
-              " 3)Usunąć studenta (niestety)"
-              " 4)Posortowanie"
-              " 5)Edycja dannych"
-              " 6)Skończyć programm";
+        str = "1)Pokazać wszystkich studentów\n"
+              "2)Dodać studenta\n"
+              "3)Usunąć studenta (niestety)\n"
+              "4)Posortowanie\n"
+              "5)Edycja dannych\n"
+              "6)Skończyć programm";
         int index = askForIndex(str);
         return index;
     }
